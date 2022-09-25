@@ -1,0 +1,61 @@
+@import '../../assests/styles/main.scss';
+
+.game {
+    display: flex;
+    justify-content: center;
+    margin-top: 100px;
+    &__container {
+        display: flex;
+        justify-content: center;
+    }
+    &__grid {
+        display: grid;
+        grid-template-columns: repeat(3, 120px);
+        grid-template-rows: repeat(3, 120px);
+    }
+    &__block {
+        cursor: pointer;
+        border-left: 2px solid #769FB6;
+        border-bottom: 2px solid #769FB6;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        &:nth-child(1), &:nth-child(4), &:nth-child(7) {
+            border-left: none;
+        } 
+        &:nth-child(7), &:nth-child(8), &:nth-child(9) {
+            border-bottom: none;
+        } 
+    }
+}
+
+.o {
+    width: 80px;
+    height: 80px;
+    box-sizing: border-box;
+    border-radius: 50%;
+    border: 5px solid #769FB6;
+}
+
+.x {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    div {
+        height: 90px;
+        width: 5px;
+        background: #769FB6;
+        position: absolute;
+        &:first-child {
+            transform: rotate(45deg);
+            right: 56px;
+            top: 12px;
+        }
+        &:last-child {
+            transform: rotate(-45deg);
+            left: 56px;
+            top: 12px;
+        }
+    }
+}

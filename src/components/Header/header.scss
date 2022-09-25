@@ -1,0 +1,17 @@
+@import '../../assests/styles/main.scss';
+
+.header {
+    display: flex;
+    justify-content: center;
+    background: #188fa7;
+    &__container {
+        height: 70px;
+        display: flex;
+        align-items: center;
+    }
+    h1 {
+        color: #E2DBBE;
+        font-size: 30px;
+        font-style: italic;
+    }
+}
