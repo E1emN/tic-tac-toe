@@ -21,7 +21,7 @@ const changeGameStoreFx = gameDomain.effect<ChangeGameStore, Cell[]>()
 const $turn = gameDomain.store<Values>('o')
 const changeTurn = gameDomain.event()
 
-const deterVictory = gameDomain.effect<Cell[], ''>()
+const determineVictory = gameDomain.effect<Cell[], ''>()
 
 changeGameStoreFx.use(({ game, currentMove }) => {
     if (game.find(g => currentMove.position === g.position).value === null) {
@@ -42,6 +42,45 @@ $game
 $turn
     .on(changeTurn, turn => turn === 'o' ? 'x' : 'o')
 
+determineVictory.use(game => {
+    const values = game.map(g => g.value)
+    let isHasWinner = false
+    // horizontal
+    values.forEach((value, index) => {
+        if (index === 2 || index === 5 || index === 8) {
+            if (!value) return
+            if (new Set([values[index], values[index - 1], values[index - 2]]).size === 1) {
+                isHasWinner = true
+            }
+        }
+    })
+    // vertical
+    values.forEach((value, index) => {
+        if (index === 6 || index === 7 || index === 8) {
+            if (!value) return
+            if (new Set([values[index], values[index - 3], values[index - 6]]).size === 1) {
+                isHasWinner = true
+            }
+        }
+    })
+    // diagonal
+    values.forEach((value, index) => {
+        if (index === 8 || index === 6) {
+            if (!value) return
+            if (index === 6 && new Set([values[index], values[index - 2], values[index - 4]]).size === 1) {
+                isHasWinner = true
+            }
+            if (index === 8 && new Set([values[index], values[index - 4], values[index - 8]]).size === 1) {
+                isHasWinner = true
+            }
+        }
+    })
+    if (isHasWinner) {
+        console.log('winner!')
+    }
+    return ''
+})
+
 sample({
     clock: moveMade,
     source: {$game, $turn},
@@ -57,5 +96,5 @@ sample({
 
 sample({
     clock: $game,
-    target: changeTurn
+    target: [changeTurn, determineVictory]
 })
