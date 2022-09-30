@@ -18,10 +18,10 @@ export const $game = gameDomain.store<Cell[]>(new Array(9).fill(null).map((_, i)
 export const moveMade = gameDomain.event<number>()
 const changeGameStoreFx = gameDomain.effect<ChangeGameStore, Cell[]>()
 
-const $turn = gameDomain.store<Values>('o')
+export const $turn = gameDomain.store<Values>('o')
 const changeTurn = gameDomain.event()
 
-const determineVictory = gameDomain.effect<Cell[], ''>()
+const determineVictory = gameDomain.effect<Cell[], boolean>()
 
 changeGameStoreFx.use(({ game, currentMove }) => {
     if (game.find(g => currentMove.position === g.position).value === null) {
@@ -76,9 +76,9 @@ determineVictory.use(game => {
         }
     })
     if (isHasWinner) {
-        console.log('winner!')
+        return true
     }
-    return ''
+    return false
 })
 
 sample({
@@ -96,5 +96,11 @@ sample({
 
 sample({
     clock: $game,
-    target: [changeTurn, determineVictory]
+    target: [determineVictory]
+})
+
+sample({
+    clock: determineVictory.doneData,
+    filter: isWinner => !isWinner,
+    target: changeTurn
 })

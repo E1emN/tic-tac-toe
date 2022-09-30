@@ -1,15 +1,17 @@
 import { useUnit } from 'effector-react'
 import React from 'react'
-import { $game, moveMade } from '../../store/game'
+import { $game, $turn, moveMade } from '../../store/game'
 import './game.scss'
 
 export const Game: React.FC = () => {
 
     const game = useUnit($game)
+    const turn = useUnit($turn)
 
     return(
         <div className='game'>
             <div className='container game__container'>
+                <span className='game__move'>Move: <span>{turn}</span></span>
                 <div className='game__grid'>
                     {
                         game.map(g => 
