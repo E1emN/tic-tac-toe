@@ -1,0 +1,24 @@
+.winner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    &__text {
+        color: #769FB6;
+        font-size: 20px;
+        margin-bottom: 40px;
+        span {
+            font-weight: 500;
+            font-size: 40px;
+            margin-left: 20px;
+        }
+    }
+    button {
+        background: #769FB6;
+        color: #fff;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 15px;
+        cursor: pointer;
+        font-size: 24px;
+    }
+}

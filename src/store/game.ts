@@ -21,7 +21,10 @@ const changeGameStoreFx = gameDomain.effect<ChangeGameStore, Cell[]>()
 export const $turn = gameDomain.store<Values>('o')
 const changeTurn = gameDomain.event()
 
-const determineVictory = gameDomain.effect<Cell[], boolean>()
+export const $isWinner = gameDomain.store<boolean>(false)
+const determineVictoryFx = gameDomain.effect<Cell[], boolean>()
+
+export const reset = gameDomain.event()
 
 changeGameStoreFx.use(({ game, currentMove }) => {
     if (game.find(g => currentMove.position === g.position).value === null) {
@@ -42,7 +45,7 @@ $game
 $turn
     .on(changeTurn, turn => turn === 'o' ? 'x' : 'o')
 
-determineVictory.use(game => {
+determineVictoryFx.use(game => {
     const values = game.map(g => g.value)
     let isHasWinner = false
     // horizontal
@@ -81,6 +84,13 @@ determineVictory.use(game => {
     return false
 })
 
+$isWinner
+    .on(determineVictoryFx.doneData, (_, isWinner) => isWinner)
+
+gameDomain.onCreateStore(store => {
+    store.reset(reset)
+})
+
 sample({
     clock: moveMade,
     source: {$game, $turn},
@@ -96,11 +106,12 @@ sample({
 
 sample({
     clock: $game,
-    target: [determineVictory]
+    filter: game => game.some(g => g.value),
+    target: [determineVictoryFx]
 })
 
 sample({
-    clock: determineVictory.doneData,
+    clock: determineVictoryFx.doneData,
     filter: isWinner => !isWinner,
     target: changeTurn
 })
